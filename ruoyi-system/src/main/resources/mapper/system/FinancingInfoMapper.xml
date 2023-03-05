@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.FinancingInfoMapper">
+    
+    <resultMap type="FinancingInfo" id="FinancingInfoResult">
+        <result property="id"    column="id"    />
+        <result property="user"    column="user"    />
+        <result property="count"    column="count"    />
+        <result property="amount"    column="amount"    />
+        <result property="finaId"    column="fina_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectFinancingInfoVo">
+        select id, user, count, amount, fina_id, create_time, update_time from financing_info
+    </sql>
+
+    <select id="selectFinancingInfoList" parameterType="FinancingInfo" resultMap="FinancingInfoResult">
+        <include refid="selectFinancingInfoVo"/>
+        <where>  
+            <if test="user != null "> and user = #{user}</if>
+            <if test="count != null "> and count = #{count}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="finaId != null "> and fina_id = #{finaId}</if>
+        </where>
+    </select>
+    
+    <select id="selectFinancingInfoById" parameterType="Long" resultMap="FinancingInfoResult">
+        <include refid="selectFinancingInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertFinancingInfo" parameterType="FinancingInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into financing_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="user != null">user,</if>
+            <if test="count != null">count,</if>
+            <if test="amount != null">amount,</if>
+            <if test="finaId != null">fina_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="user != null">#{user},</if>
+            <if test="count != null">#{count},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="finaId != null">#{finaId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFinancingInfo" parameterType="FinancingInfo">
+        update financing_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="user != null">user = #{user},</if>
+            <if test="count != null">count = #{count},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="finaId != null">fina_id = #{finaId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFinancingInfoById" parameterType="Long">
+        delete from financing_info where id = #{id}
+    </delete>
+
+    <delete id="deleteFinancingInfoByIds" parameterType="String">
+        delete from financing_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

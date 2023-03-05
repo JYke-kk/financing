@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.FinancingMapper">
+    
+    <resultMap type="Financing" id="FinancingResult">
+        <result property="id"    column="id"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="personSum"    column="person_sum"    />
+        <result property="amount"    column="amount"    />
+        <result property="amountSum"    column="amount_sum"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="status"    column="status"    />
+        <result property="pic"    column="pic"    />
+        <result property="userId"    column="user_id"    />
+    </resultMap>
+
+    <sql id="selectFinancingVo">
+        select id, project_name, person_sum, amount, amount_sum, create_time, update_time, status, pic, user_id from financing
+    </sql>
+
+    <select id="selectFinancingList" parameterType="Financing" resultMap="FinancingResult">
+        <include refid="selectFinancingVo"/>
+        <where>  
+            <if test="projectName != null  and projectName != ''"> and project_name like concat('%', #{projectName}, '%')</if>
+            <if test="personSum != null "> and person_sum = #{personSum}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="amountSum != null  and amountSum != ''"> and amount_sum = #{amountSum}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="pic != null  and pic != ''"> and pic = #{pic}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+        </where>
+    </select>
+    
+    <select id="selectFinancingById" parameterType="Long" resultMap="FinancingResult">
+        <include refid="selectFinancingVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertFinancing" parameterType="Financing" useGeneratedKeys="true" keyProperty="id">
+        insert into financing
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="projectName != null">project_name,</if>
+            <if test="personSum != null">person_sum,</if>
+            <if test="amount != null">amount,</if>
+            <if test="amountSum != null">amount_sum,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="status != null">status,</if>
+            <if test="pic != null">pic,</if>
+            <if test="userId != null">user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="projectName != null">#{projectName},</if>
+            <if test="personSum != null">#{personSum},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="amountSum != null">#{amountSum},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="pic != null">#{pic},</if>
+            <if test="userId != null">#{userId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFinancing" parameterType="Financing">
+        update financing
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectName != null">project_name = #{projectName},</if>
+            <if test="personSum != null">person_sum = #{personSum},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="amountSum != null">amount_sum = #{amountSum},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="pic != null">pic = #{pic},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFinancingById" parameterType="Long">
+        delete from financing where id = #{id}
+    </delete>
+
+    <delete id="deleteFinancingByIds" parameterType="String">
+        delete from financing where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
